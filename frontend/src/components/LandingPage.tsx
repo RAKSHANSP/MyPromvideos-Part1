@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { BarChart3, Plus, X, Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, Download, Users } from 'lucide-react';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts';
 
 interface LandingPageProps {
   onReportGenerated: (reportId: string) => void;
@@ -43,7 +51,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onReportGenerated }) => {
 
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/report/generate', {
+      const response = await fetch('import.meta.env.VITE_API_URL/api/report/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
