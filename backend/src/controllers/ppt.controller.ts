@@ -3,7 +3,7 @@ import { prisma } from '../index';
 import { generatePPTBuffer } from '../services/ppt.service';
 
 export const generatePPT = async (req: Request, res: Response): Promise<any> => {
-  const { id } = req.params;
+  const id = req.params.id as string;
 
   try {
     const report = await prisma.report.findUnique({

@@ -72,7 +72,7 @@ export const generateReport = async (req: Request, res: Response): Promise<any> 
 };
 
 export const getReport = async (req: Request, res: Response): Promise<any> => {
-  const { id } = req.params;
+  const id = req.params.id as string;
 
   try {
     const report = await prisma.report.findUnique({
