@@ -12,13 +12,16 @@ interface LandingPageProps {
   onReportGenerated: (reportId: string) => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({
+const LandingPage = ({
   onReportGenerated
-}) => {
+}: LandingPageProps) => {
+
   const [companyName, setCompanyName] = useState('');
   const [competitors, setCompetitors] = useState<string[]>(['']);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleAddCompetitor = () => {
     if (competitors.length < 4) {
@@ -29,6 +32,11 @@ const LandingPage: React.FC<LandingPageProps> = ({
   const handleRemoveCompetitor = (index: number) => {
     const updated = [...competitors];
     updated.splice(index, 1);
+
+    if (updated.length === 0) {
+      updated.push('');
+    }
+
     setCompetitors(updated);
   };
 
@@ -42,7 +50,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
   };
 
   const handleSubmit = async (
-    e: React.FormEvent
+    e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
 
@@ -61,29 +69,37 @@ const LandingPage: React.FC<LandingPageProps> = ({
       setLoading(true);
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/report/generate`,
+        `${API_URL}/api/report/generate`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            companyName,
+            companyName: companyName.trim(),
             competitors: validCompetitors
           })
         }
       );
 
       if (!response.ok) {
-        throw new Error('Failed to generate report');
+        const errorData = await response.json().catch(() => null);
+
+        throw new Error(
+          errorData?.error || 'Failed to generate report'
+        );
       }
 
       const data = await response.json();
 
+      if (!data.reportId) {
+        throw new Error('Report ID not received');
+      }
+
       onReportGenerated(data.reportId);
 
     } catch (err: any) {
-      console.error(err);
+      console.error('Generate Report Error:', err);
 
       setError(
         err.message || 'Something went wrong'
@@ -96,11 +112,13 @@ const LandingPage: React.FC<LandingPageProps> = ({
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-slate-50 to-slate-100">
 
+      {/* HEADER */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-3xl w-full text-center space-y-4 mb-12"
       >
+
         <div className="flex justify-center mb-6">
           <div className="p-4 bg-blue-600 rounded-2xl shadow-lg shadow-blue-500/30">
             <BarChart3 className="w-12 h-12 text-white" />
@@ -118,20 +136,25 @@ const LandingPage: React.FC<LandingPageProps> = ({
           Analyze YouTube marketing performance
           against your top competitors and
           generate consulting-grade PowerPoint
-          reports in seconds.
+          reports instantly.
         </p>
+
       </motion.div>
 
+      {/* FORM CARD */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.1 }}
         className="w-full max-w-xl bg-white rounded-2xl shadow-xl border border-slate-100 p-8"
       >
+
         <form
           onSubmit={handleSubmit}
           className="space-y-6"
         >
+
+          {/* COMPANY */}
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">
               Your Company Name
@@ -149,6 +172,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
             />
           </div>
 
+          {/* COMPETITORS */}
           <div className="space-y-3">
 
             <div className="flex justify-between items-center">
@@ -164,6 +188,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
                 animate={{ opacity: 1, x: 0 }}
                 className="flex items-center gap-2"
               >
+
                 <input
                   type="text"
                   placeholder={`Competitor ${idx + 1}`}
@@ -188,6 +213,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
                     <X className="w-5 h-5" />
                   </button>
                 )}
+
               </motion.div>
             ))}
 
@@ -201,19 +227,23 @@ const LandingPage: React.FC<LandingPageProps> = ({
                 Add another competitor
               </button>
             )}
+
           </div>
 
+          {/* ERROR */}
           {error && (
             <div className="p-4 bg-red-50 text-red-700 rounded-lg text-sm font-medium">
               {error}
             </div>
           )}
 
+          {/* SUBMIT */}
           <button
             type="submit"
             disabled={loading}
             className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-lg shadow-lg shadow-blue-500/30 transition-all disabled:opacity-70 flex justify-center items-center gap-2"
           >
+
             {loading ? (
               <>
                 <Loader2 className="w-6 h-6 animate-spin" />
@@ -222,6 +252,7 @@ const LandingPage: React.FC<LandingPageProps> = ({
             ) : (
               'Generate Intelligence Report'
             )}
+
           </button>
 
         </form>
