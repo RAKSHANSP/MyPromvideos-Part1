@@ -96,6 +96,9 @@ const ReportDashboard: React.FC<ReportDashboardProps> = ({
     views: Number(c.channelData.totalViews),
     engagement: parseFloat(
       c.channelData.engagementRate.toFixed(2)
+    ),
+    uploadFrequency: parseFloat(
+      c.channelData.uploadFrequency.toFixed(1)
     )
   }));
 
@@ -243,6 +246,101 @@ const ReportDashboard: React.FC<ReportDashboardProps> = ({
                   <Bar
                     dataKey="engagement"
                     fill="#10B981"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Total Views */}
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h3 className="text-lg font-bold text-slate-900 mb-6">
+              Total Views
+            </h3>
+
+            <div className="h-80 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={chartData}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5
+                  }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="#E2E8F0"
+                  />
+
+                  <XAxis
+                    dataKey="name"
+                    axisLine={false}
+                    tickLine={false}
+                  />
+
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tickFormatter={(value) =>
+                      `${(value / 1000000).toFixed(1)}M`
+                    }
+                  />
+
+                  <Tooltip cursor={{ fill: '#F1F5F9' }} />
+
+                  <Bar
+                    dataKey="views"
+                    fill="#F59E0B"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Upload Frequency */}
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h3 className="text-lg font-bold text-slate-900 mb-6">
+              Upload Frequency (Per Week)
+            </h3>
+
+            <div className="h-80 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={chartData}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5
+                  }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="#E2E8F0"
+                  />
+
+                  <XAxis
+                    dataKey="name"
+                    axisLine={false}
+                    tickLine={false}
+                  />
+
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                  />
+
+                  <Tooltip cursor={{ fill: '#F1F5F9' }} />
+
+                  <Bar
+                    dataKey="uploadFrequency"
+                    fill="#8B5CF6"
                     radius={[4, 4, 0, 0]}
                   />
                 </BarChart>

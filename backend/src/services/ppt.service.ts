@@ -270,7 +270,83 @@ export const generatePPTBuffer = async (reportData: any): Promise<Buffer> => {
     masterName: 'MASTER_SLIDE'
   });
 
-  slide5.addText('Engagement Rate Deep Dive', {
+  slide5.addText('Subscriber Market Share', {
+    x: 0.5,
+    y: 0.8,
+    w: 9,
+    h: 0.5,
+    fontSize: 28,
+    bold: true,
+    color: '1E293B'
+  });
+
+  const pieSubData = [
+    {
+      name: 'Subscribers',
+      labels: competitors.map((c: any) => c.name),
+      values: competitors.map((c: any) => c.channelData.subscribers)
+    }
+  ];
+
+  slide5.addChart(pres.ChartType.pie, pieSubData, {
+    x: 2,
+    y: 1.5,
+    w: 6,
+    h: 3.5,
+    showLegend: true,
+    legendPos: 'r',
+    showValue: true,
+    showPercent: true,
+    dataLabelColor: 'FFFFFF'
+  });
+
+  // =========================================================
+  // SLIDE 6
+  // =========================================================
+
+  const slide6 = pres.addSlide({
+    masterName: 'MASTER_SLIDE'
+  });
+
+  slide6.addText('Viewership Market Share', {
+    x: 0.5,
+    y: 0.8,
+    w: 9,
+    h: 0.5,
+    fontSize: 28,
+    bold: true,
+    color: '1E293B'
+  });
+
+  const pieViewsData = [
+    {
+      name: 'Views',
+      labels: competitors.map((c: any) => c.name),
+      values: competitors.map((c: any) => Number(c.channelData.totalViews))
+    }
+  ];
+
+  slide6.addChart(pres.ChartType.doughnut, pieViewsData, {
+    x: 2,
+    y: 1.5,
+    w: 6,
+    h: 3.5,
+    showLegend: true,
+    legendPos: 'r',
+    showValue: false,
+    showPercent: true,
+    holeSize: 50
+  });
+
+  // =========================================================
+  // SLIDE 7
+  // =========================================================
+
+  const slide7 = pres.addSlide({
+    masterName: 'MASTER_SLIDE'
+  });
+
+  slide7.addText('Engagement Rate Deep Dive', {
     x: 0.5,
     y: 0.8,
     w: 9,
@@ -290,7 +366,7 @@ export const generatePPTBuffer = async (reportData: any): Promise<Buffer> => {
     }
   ];
 
-  slide5.addChart(pres.ChartType.line, engChartData, {
+  slide7.addChart(pres.ChartType.line, engChartData, {
     x: 0.5,
     y: 1.5,
     w: 9,
@@ -302,14 +378,14 @@ export const generatePPTBuffer = async (reportData: any): Promise<Buffer> => {
   });
 
   // =========================================================
-  // SLIDE 6
+  // SLIDE 8
   // =========================================================
 
-  const slide6 = pres.addSlide({
+  const slide8 = pres.addSlide({
     masterName: 'MASTER_SLIDE'
   });
 
-  slide6.addText('Content Velocity (Upload Frequency)', {
+  slide8.addText('Content Velocity (Upload Frequency)', {
     x: 0.5,
     y: 0.8,
     w: 9,
@@ -329,25 +405,60 @@ export const generatePPTBuffer = async (reportData: any): Promise<Buffer> => {
     }
   ];
 
-  slide6.addChart(pres.ChartType.bar, freqChartData, {
+  slide8.addChart(pres.ChartType.bar, freqChartData, {
     x: 0.5,
     y: 1.5,
     w: 9,
     h: 3.5,
     showLegend: false,
-    barDir: 'bar',
+    barDir: 'col',
     showValue: true
   });
 
   // =========================================================
-  // SLIDE 7
+  // SLIDE 9
   // =========================================================
 
-  const slide7 = pres.addSlide({
+  const slide9 = pres.addSlide({
     masterName: 'MASTER_SLIDE'
   });
 
-  slide7.addText('The Data Matrix', {
+  slide9.addText('Competitor Performance Score', {
+    x: 0.5,
+    y: 0.8,
+    w: 9,
+    h: 0.5,
+    fontSize: 28,
+    bold: true,
+    color: '1E293B'
+  });
+
+  const radarData = [
+    {
+      name: 'Overall Score',
+      labels: competitors.map((c: any) => c.name),
+      values: competitors.map((c: any) => c.channelData.score)
+    }
+  ];
+
+  slide9.addChart(pres.ChartType.radar, radarData, {
+    x: 2.5,
+    y: 1.5,
+    w: 5,
+    h: 3.5,
+    showLegend: false,
+    showValue: true
+  });
+
+  // =========================================================
+  // SLIDE 10
+  // =========================================================
+
+  const slide10 = pres.addSlide({
+    masterName: 'MASTER_SLIDE'
+  });
+
+  slide10.addText('The Data Matrix', {
     x: 0.5,
     y: 0.8,
     w: 9,
@@ -377,7 +488,7 @@ export const generatePPTBuffer = async (reportData: any): Promise<Buffer> => {
     ]);
   });
 
-  slide7.addTable(tableData, {
+  slide10.addTable(tableData, {
     x: 0.5,
     y: 1.5,
     w: 9,
@@ -392,14 +503,14 @@ export const generatePPTBuffer = async (reportData: any): Promise<Buffer> => {
   });
 
   // =========================================================
-  // SLIDE 8
+  // SLIDE 11
   // =========================================================
 
-  const slide8 = pres.addSlide({
+  const slide11 = pres.addSlide({
     masterName: 'MASTER_SLIDE'
   });
 
-  slide8.addText('Top Performing Videos', {
+  slide11.addText('Top Performing Videos', {
     x: 0.5,
     y: 0.8,
     w: 9,
@@ -409,63 +520,34 @@ export const generatePPTBuffer = async (reportData: any): Promise<Buffer> => {
     color: '1E293B'
   });
 
-  let yPos = 1.6;
-
-  allVideos.slice(0, 5).forEach((video: any, index: number) => {
-    slide8.addText(
-      `${index + 1}. ${video.title} (${video.views.toLocaleString()} views)`,
-      {
-        x: 0.8,
-        y: yPos,
-        w: 10,
-        h: 0.3,
-        fontSize: 16,
-        color: '334155'
-      }
-    );
-
-    yPos += 0.6;
-  });
-
-  // =========================================================
-  // SLIDE 9
-  // =========================================================
-
-  const slide9 = pres.addSlide({
-    masterName: 'MASTER_SLIDE'
-  });
-
-  slide9.addText('SEO & Keyword Insights', {
-    x: 0.5,
-    y: 0.8,
-    w: 9,
-    h: 0.5,
-    fontSize: 28,
-    bold: true,
-    color: '1E293B'
-  });
-
-  slide9.addText(
-    'Top keywords and tags frequently used across competitor channels.',
+  const topVideos = allVideos.slice(0, 5);
+  const topVideosChartData = [
     {
-      x: 0.5,
-      y: 1.6,
-      w: 9,
-      h: 0.5,
-      fontSize: 18,
-      color: '334155'
+      name: 'Views',
+      labels: topVideos.map((v: any) => v.title.length > 30 ? v.title.substring(0, 30) + '...' : v.title),
+      values: topVideos.map((v: any) => v.views)
     }
-  );
+  ];
+
+  slide11.addChart(pres.ChartType.bar, topVideosChartData, {
+    x: 0.5,
+    y: 1.5,
+    w: 9,
+    h: 3.5,
+    showLegend: false,
+    barDir: 'bar',
+    showValue: true
+  });
 
   // =========================================================
-  // SLIDE 10
+  // SLIDE 12
   // =========================================================
 
-  const slide10 = pres.addSlide({
+  const slide12 = pres.addSlide({
     masterName: 'MASTER_SLIDE'
   });
 
-  slide10.addText('Strategic Recommendations', {
+  slide12.addText('Strategic Recommendations', {
     x: 0.5,
     y: 0.8,
     w: 9,
@@ -475,7 +557,7 @@ export const generatePPTBuffer = async (reportData: any): Promise<Buffer> => {
     color: '1E293B'
   });
 
-  slide10.addText(
+  slide12.addText(
     [
       {
         text: `Focus on audience growth strategies used by ${mostSubscribers.name}.\n\n`,
