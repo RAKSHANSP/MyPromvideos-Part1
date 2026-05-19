@@ -1,11 +1,12 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Video Competitor Intelligence Backend",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node --transpile-only src/index.ts",
-    "start": "ts-node --transpile-only src/index.ts"
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
