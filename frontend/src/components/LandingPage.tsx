@@ -12,7 +12,9 @@ interface LandingPageProps {
   onReportGenerated: (reportId: string) => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onReportGenerated }) => {
+const LandingPage: React.FC<LandingPageProps> = ({
+  onReportGenerated
+}) => {
   const [companyName, setCompanyName] = useState('');
   const [competitors, setCompetitors] = useState<string[]>(['']);
   const [loading, setLoading] = useState(false);
@@ -25,19 +27,25 @@ const LandingPage: React.FC<LandingPageProps> = ({ onReportGenerated }) => {
   };
 
   const handleRemoveCompetitor = (index: number) => {
-    const newCompetitors = [...competitors];
-    newCompetitors.splice(index, 1);
-    setCompetitors(newCompetitors);
+    const updated = [...competitors];
+    updated.splice(index, 1);
+    setCompetitors(updated);
   };
 
-  const handleCompetitorChange = (index: number, value: string) => {
-    const newCompetitors = [...competitors];
-    newCompetitors[index] = value;
-    setCompetitors(newCompetitors);
+  const handleCompetitorChange = (
+    index: number,
+    value: string
+  ) => {
+    const updated = [...competitors];
+    updated[index] = value;
+    setCompetitors(updated);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
     e.preventDefault();
+
     setError('');
 
     if (!companyName.trim()) {
@@ -45,27 +53,41 @@ const LandingPage: React.FC<LandingPageProps> = ({ onReportGenerated }) => {
       return;
     }
 
-    const validCompetitors = competitors.filter(c => c.trim() !== '');
+    const validCompetitors = competitors.filter(
+      (c) => c.trim() !== ''
+    );
 
-    setLoading(true);
     try {
-      const response = await fetch('import.meta.env.VITE_API_URL/api/report/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          companyName,
-          competitors: validCompetitors
-        })
-      });
+      setLoading(true);
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/report/generate`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            companyName,
+            competitors: validCompetitors
+          })
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Failed to generate report');
       }
 
       const data = await response.json();
+
       onReportGenerated(data.reportId);
+
     } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+      console.error(err);
+
+      setError(
+        err.message || 'Something went wrong'
+      );
     } finally {
       setLoading(false);
     }
@@ -73,6 +95,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onReportGenerated }) => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-slate-50 to-slate-100">
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -83,11 +106,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onReportGenerated }) => {
             <BarChart3 className="w-12 h-12 text-white" />
           </div>
         </div>
+
         <h1 className="text-5xl font-extrabold tracking-tight text-slate-900">
-          Video Competitor <span className="text-blue-600">Intelligence</span>
+          Video Competitor{' '}
+          <span className="text-blue-600">
+            Intelligence
+          </span>
         </h1>
+
         <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-          Analyze YouTube marketing performance against your top competitors and generate consulting-grade PowerPoint reports in seconds.
+          Analyze YouTube marketing performance
+          against your top competitors and
+          generate consulting-grade PowerPoint
+          reports in seconds.
         </p>
       </motion.div>
 
@@ -97,22 +128,33 @@ const LandingPage: React.FC<LandingPageProps> = ({ onReportGenerated }) => {
         transition={{ delay: 0.1 }}
         className="w-full max-w-xl bg-white rounded-2xl shadow-xl border border-slate-100 p-8"
       >
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6"
+        >
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">Your Company Name</label>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
+              Your Company Name
+            </label>
+
             <input
               type="text"
-              placeholder="e.g.Enter a Company name"
+              placeholder="e.g. Nike"
               value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
+              onChange={(e) =>
+                setCompanyName(e.target.value)
+              }
               className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
               required
             />
           </div>
 
           <div className="space-y-3">
+
             <div className="flex justify-between items-center">
-              <label className="block text-sm font-semibold text-slate-700">Competitors (Up to 4)</label>
+              <label className="block text-sm font-semibold text-slate-700">
+                Competitors (Up to 4)
+              </label>
             </div>
 
             {competitors.map((comp, idx) => (
@@ -126,13 +168,21 @@ const LandingPage: React.FC<LandingPageProps> = ({ onReportGenerated }) => {
                   type="text"
                   placeholder={`Competitor ${idx + 1}`}
                   value={comp}
-                  onChange={(e) => handleCompetitorChange(idx, e.target.value)}
+                  onChange={(e) =>
+                    handleCompetitorChange(
+                      idx,
+                      e.target.value
+                    )
+                  }
                   className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
                 />
+
                 {competitors.length > 1 && (
                   <button
                     type="button"
-                    onClick={() => handleRemoveCompetitor(idx)}
+                    onClick={() =>
+                      handleRemoveCompetitor(idx)
+                    }
                     className="p-3 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                   >
                     <X className="w-5 h-5" />
@@ -147,7 +197,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onReportGenerated }) => {
                 onClick={handleAddCompetitor}
                 className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 mt-2"
               >
-                <Plus className="w-4 h-4" /> Add another competitor
+                <Plus className="w-4 h-4" />
+                Add another competitor
               </button>
             )}
           </div>
@@ -172,6 +223,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onReportGenerated }) => {
               'Generate Intelligence Report'
             )}
           </button>
+
         </form>
       </motion.div>
     </div>
