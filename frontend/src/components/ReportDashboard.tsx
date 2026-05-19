@@ -16,7 +16,7 @@ const ReportDashboard: React.FC<ReportDashboardProps> = ({ reportId, onBack }) =
   useEffect(() => {
     const fetchReport = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/report/${reportId}`);
+        const res = await fetch(`import.meta.env.VITE_API_URL/api/report/${reportId}`);
         if (!res.ok) throw new Error('Failed to fetch report');
         const data = await res.json();
         setReport(data);
@@ -61,7 +61,7 @@ const ReportDashboard: React.FC<ReportDashboardProps> = ({ reportId, onBack }) =
   }));
 
   const handleDownloadPPT = () => {
-    window.open(`http://localhost:5000/api/ppt/${reportId}`, '_blank');
+    window.open(`import.meta.env.VITE_API_URL/api/ppt/${reportId}`, '_blank');
   };
 
   return (
