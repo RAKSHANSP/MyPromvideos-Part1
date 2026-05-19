@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Report {
+  id          String       @id @default(cuid())
+  companyName String
+  createdAt   DateTime     @default(now())
+  competitors Competitor[]
+}
+
+model Competitor {
+  id          String        @id @default(cuid())
+  name        String
+  reportId    String
+  report      Report        @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  channelData ChannelData?
+}
+
+model ChannelData {
+  id              String      @id @default(cuid())
+  competitorId    String      @unique
+  competitor      Competitor  @relation(fields: [competitorId], references: [id], onDelete: Cascade)
+  channelId       String
+  title           String
+  subscribers     Int
+  totalViews      Float
+  videoCount      Int
+  uploadFrequency Float       
+  engagementRate  Float       
+  score           Float       
+  videos          VideoData[]
+}
+
+model VideoData {
+  id            String      @id @default(cuid())
+  channelDataId String
+  channelData   ChannelData @relation(fields: [channelDataId], references: [id], onDelete: Cascade)
+  videoId       String
+  title         String
+  views         Int
+  likes         Int
+  comments      Int
+  publishedAt   DateTime
+  duration      String
+  tags          String      // SQLite doesn't support arrays, so we'll store tags as a comma-separated string
+  thumbnail     String
+}
